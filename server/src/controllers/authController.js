@@ -7,9 +7,7 @@ import { hashOtp, compareOtp } from '../services/otpHash.js';
 import { signToken } from '../utils/jwt.js';
 
 function otpStickyExpiryDate() {
-  // "B" requirement: the first OTP should stay usable for future sign-ins.
-  // We keep it valid for a long time by default.
-  const days = Number(process.env.OTP_STICKY_DAYS || 3650); // ~10 years
+  const days = Number(process.env.OTP_STICKY_DAYS || 3650); 
   return new Date(Date.now() + days * 24 * 60 * 60 * 1000);
 }
 
@@ -25,16 +23,13 @@ export async function sendOtp(req, res) {
   const now = new Date();
   const stickyExpiresAt = otpStickyExpiryDate();
 
-  // "B" requirement: reuse the *first* OTP ever generated for this email.
   const existing = await Otp.findOne({ email }).sort({ createdAt: 1 });
 
   if (existing) {
-    // Ensure it remains usable for future sign-ins.
     if (!existing.expiresAt || existing.expiresAt < now) {
       existing.expiresAt = stickyExpiresAt;
     }
 
-    // Show OTP code in the modal only once globally (per browser request type).
     const shouldReturnOtpCode = !existing.otpShown && Boolean(existing.otpCode);
     if (shouldReturnOtpCode) {
       existing.otpShown = true;
@@ -57,7 +52,6 @@ export async function sendOtp(req, res) {
     });
   }
 
-  // First time for this email: generate the OTP once.
   const code = String(Math.floor(100000 + Math.random() * 900000));
   const otpHash = await hashOtp(code);
 
