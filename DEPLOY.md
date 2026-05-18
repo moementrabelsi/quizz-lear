@@ -41,7 +41,8 @@
 ## 2. Frontend on Vercel
 
 1. [Vercel](https://vercel.com/) → **Add New Project** → import the same GitHub repo.
-2. Leave defaults: root `vercel.json` builds the `client` app (`installCommand` / `buildCommand` use `--prefix client`).
+2. **Root Directory:** set to `client` (Settings → General → Root Directory).  
+   `client/vercel.json` handles the Vite build and SPA routing — do **not** use a repo-root `vercel.json` with `--prefix client` (that breaks when Root Directory is already `client`).
 3. **Environment variables** (Project → Settings → Environment Variables):
 
    | Name | Value |
