@@ -5,38 +5,19 @@ import authRoutes from './routes/authRoutes.js';
 import quizRoutes from './routes/quizRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import { connectDb } from './config/db.js';
+import { createCorsOptions, logAllowedOrigins } from './config/cors.js';
 
 dotenv.config();
+logAllowedOrigins();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-
-function parseClientOrigins() {
-  const raw = process.env.CLIENT_ORIGIN || 'http://localhost:5173';
-  return raw
-    .split(',')
-    .map((o) => o.trim())
-    .filter(Boolean);
-}
-
-const allowedOrigins = parseClientOrigins();
 
 if (process.env.NODE_ENV === 'production') {
   app.set('trust proxy', 1);
 }
 
-app.use(
-  cors({
-    origin(origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(null, false);
-      }
-    },
-    credentials: true,
-  })
-);
+app.use(cors(createCorsOptions()));
 app.use(express.json({ limit: '1mb' }));
 
 app.get('/api/health', (_req, res) => res.json({ ok: true }));

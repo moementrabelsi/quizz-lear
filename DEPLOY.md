@@ -24,7 +24,7 @@
    | `NODE_ENV` | `production` |
    | `MONGODB_URI` | Atlas connection string |
    | `JWT_SECRET` | Long random string (Render can auto-generate) |
-   | `CLIENT_ORIGIN` | Your Vercel URL, e.g. `https://quizz-lear.vercel.app` — comma-separate preview URLs if needed |
+   | `CLIENT_ORIGIN` | Must match the browser URL exactly, e.g. `https://quizz-lear-8k3t.vercel.app` — or use `*.vercel.app` to allow all Vercel preview/production hosts |
    | `SMTP_*` | Your mail provider (required for real OTP delivery) |
    | `ADMIN_EMAIL` | `admin@lear.com` (for seeding) |
 
